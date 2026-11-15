@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ApexQuant Pro | Algorithmic Trading & M-Pesa Terminal</title>
+  <title>ApexQuant Pro | Weekend Crypto & Terminal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -44,7 +44,7 @@
         </div>
         <div>
           <h1 class="font-bold text-white tracking-tight leading-none">APEXQUANT <span class="text-xs bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded ml-1">PRO</span></h1>
-          <p class="text-[11px] text-gray-400">Institutional Execution & M-Pesa Gateway</p>
+          <p class="text-[11px] text-gray-400" id="market-status-banner">Institutional Execution & M-Pesa Gateway</p>
         </div>
       </div>
 
@@ -66,7 +66,6 @@
         <div>
           <div class="flex items-center gap-2 mb-0.5">
             <span class="text-[10px] uppercase tracking-wider text-gray-400">Available Equity</span>
-            <!-- KES / USD Switcher -->
             <div class="inline-flex bg-gray-950 border border-gray-700 rounded p-0.5 text-[10px] font-bold">
               <button id="curr-kes" onclick="setCurrency('KES')" class="px-1.5 py-0.5 rounded bg-emerald-500 text-gray-950 transition">KES</button>
               <button id="curr-usd" onclick="setCurrency('USD')" class="px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition">USD</button>
@@ -92,19 +91,18 @@
         <div class="flex items-center gap-3">
           <label class="text-xs text-gray-400 font-medium">Chart Pair:</label>
           <select id="symbol-selector" onchange="changeTradingViewSymbol(this.value)" class="bg-gray-900 border border-gray-700 text-white text-xs font-semibold rounded-lg px-3 py-1.5 focus:outline-none focus:border-emerald-500">
-            <option value="OANDA:XAUUSD">XAU/USD (Gold)</option>
-            <option value="FX:EURUSD">EUR/USD</option>
-            <option value="FX:GBPUSD">GBP/USD</option>
-            <option value="BINANCE:BTCUSDT">BTC/USDT (Bitcoin)</option>
-            <option value="FOREXCOM:US500">US500 (S&P 500)</option>
-            <option value="FOREXCOM:NAS100">US100 (Nasdaq)</option>
+            <option value="BINANCE:BTCUSDT">BTC/USDT (Crypto - Open 24/7)</option>
+            <option value="OANDA:XAUUSD" class="forex-option">XAU/USD (Gold - Closed Weekend)</option>
+            <option value="FX:EURUSD" class="forex-option">EUR/USD (Forex - Closed Weekend)</option>
+            <option value="FX:GBPUSD" class="forex-option">GBP/USD (Forex - Closed Weekend)</option>
+            <option value="FOREXCOM:NAS100" class="forex-option">US100 (Indices - Closed Weekend)</option>
           </select>
         </div>
 
         <div class="flex flex-wrap items-center gap-4 text-xs">
           <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 pulse-dot"></span>
-            <span class="text-gray-300 font-medium">Liquidity Bridge: <strong class="text-emerald-400">CONNECTED (14ms)</strong></span>
+            <span id="market-light" class="w-2.5 h-2.5 rounded-full bg-emerald-500 pulse-dot"></span>
+            <span class="text-gray-300 font-medium">Market State: <strong id="market-mode-label" class="text-emerald-400">WEEKEND MODE (BTC ONLY)</strong></span>
           </div>
           <div class="text-gray-400">Session P&L: <span id="bot-pnl" class="mono font-bold text-emerald-400">+KES 0.00</span></div>
         </div>
@@ -118,7 +116,7 @@
           <div class="glass-panel rounded-xl overflow-hidden flex flex-col">
             <div class="px-4 py-2.5 border-b border-gray-800 flex items-center justify-between">
               <span class="text-xs font-semibold text-gray-300 uppercase tracking-wider">TradingView Real-Time Analysis Terminal</span>
-              <span class="text-[11px] text-gray-400">Multi-Timeframe • Indicators Enabled</span>
+              <span id="chart-status-note" class="text-[11px] text-emerald-400 font-semibold">BTC/USDT Live Feed Active</span>
             </div>
             <div id="tv-chart-container" class="w-full h-[420px] bg-gray-950"></div>
           </div>
@@ -135,7 +133,7 @@
 
             <div id="open-positions-container" class="space-y-2 text-xs">
               <div id="no-positions-msg" class="text-center py-6 text-gray-500">
-                No active positions. Click <strong class="text-emerald-400">BUY</strong> or <strong class="text-rose-400">SELL</strong> on any scanned market signal to open a trade.
+                No active positions. Weekend trading is active for <strong class="text-emerald-400">BTC/USDT</strong>.
               </div>
             </div>
           </div>
@@ -149,7 +147,7 @@
                 <h2 class="font-bold text-white text-sm flex items-center gap-2">
                   <span>🤖 VectorPulse AI Scanner</span>
                 </h2>
-                <p class="text-[11px] text-gray-400">RSI + EMA + Liquidity Sweep Engine</p>
+                <p class="text-[11px] text-gray-400">Weekend BTC Crypto Engine</p>
               </div>
               <span id="bot-status-badge" class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-gray-800 text-gray-400">
                 STANDBY
@@ -165,9 +163,8 @@
               <div class="bg-gray-900/90 p-2.5 rounded-lg border border-gray-800">
                 <label class="text-[10px] text-gray-400 block mb-1">Risk Strategy</label>
                 <select id="bot-strategy" class="w-full bg-gray-900 text-white font-semibold focus:outline-none">
-                  <option value="scalp">Smart Scalper (1M/5M)</option>
-                  <option value="swing">Institutional Trend (1H)</option>
-                  <option value="news">High-Impact Breakout</option>
+                  <option value="crypto">BTC Crypto Momentum</option>
+                  <option value="scalp">Smart Scalper</option>
                 </select>
               </div>
             </div>
@@ -176,7 +173,7 @@
             <div>
               <div class="flex justify-between items-center mb-1.5">
                 <span class="text-[11px] font-semibold text-gray-400 uppercase">Live Market Scanner Signals</span>
-                <span class="text-[10px] text-emerald-400 mono" id="scan-timer">Scanning...</span>
+                <span class="text-[10px] text-emerald-400 mono" id="scan-timer">BTC Active</span>
               </div>
               <div id="scanner-list" class="space-y-2 max-h-[260px] overflow-y-auto pr-1 text-xs">
                 <!-- Populated dynamically by JS -->
@@ -187,14 +184,14 @@
             <div>
               <span class="text-[11px] font-semibold text-gray-400 uppercase block mb-1">Bot Execution Log</span>
               <div id="bot-logs" class="bg-gray-950 border border-gray-800 rounded-lg p-2.5 h-[110px] overflow-y-auto mono text-[11px] space-y-1 text-gray-300">
-                <div class="text-gray-500">[SYSTEM] Ready. Click BUY/SELL on a signal or start auto-robot.</div>
+                <div class="text-gray-500">[SYSTEM] Weekend mode active. Forex markets closed. Trading BTC/USDT.</div>
               </div>
             </div>
           </div>
 
           <!-- Start / Stop Button -->
           <button id="toggle-bot-btn" onclick="toggleBot()" class="w-full py-3 rounded-lg font-bold text-xs uppercase tracking-wider bg-emerald-500 hover:bg-emerald-400 text-gray-950 transition shadow-lg shadow-emerald-500/20">
-            ▶ Activate Auto-Trading Robot
+            ▶ Activate BTC Auto-Robot
           </button>
         </div>
 
@@ -342,7 +339,6 @@
   <!-- TRADINGVIEW WIDGET SCRIPT -->
   <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
   <script>
-    // --- CURRENCY & BALANCE STATE (Base currency stored in KES) ---
     const KES_PER_USD = 130.05;
     let displayCurrency = 'KES';
     let balanceKES = 45250.00;
@@ -350,6 +346,12 @@
     let botActive = false;
     let botInterval = null;
     let openPositions = [];
+
+    // Check if today is Weekend (Saturday = 6, Sunday = 0)
+    function isWeekendMarketClosed() {
+      const day = new Date().getDay();
+      return (day === 0 || day === 6);
+    }
 
     function formatMoney(amountKES, includeSign = false) {
       const val = displayCurrency === 'USD' ? (amountKES / KES_PER_USD) : amountKES;
@@ -363,7 +365,6 @@
       const stakeInput = document.getElementById('bot-stake');
       const currentStake = parseFloat(stakeInput.value) || 0;
 
-      // Convert stake input value smoothly when switching currency
       if (curr === 'USD') {
         stakeInput.value = (currentStake / KES_PER_USD).toFixed(2);
       } else {
@@ -373,7 +374,6 @@
       displayCurrency = curr;
       document.getElementById('stake-label').textContent = `Stake / Trade (${curr})`;
 
-      // Update toggle buttons styling
       const kesBtn = document.getElementById('curr-kes');
       const usdBtn = document.getElementById('curr-usd');
       if (curr === 'KES') {
@@ -419,18 +419,29 @@
     }
 
     function changeTradingViewSymbol(symbol) {
+      const isWeekend = isWeekendMarketClosed();
+      if (isWeekend && symbol !== 'BINANCE:BTCUSDT') {
+        showToast('🔒 Forex & Gold markets are closed for the weekend. Only BTC is active.');
+        document.getElementById('symbol-selector').value = 'BINANCE:BTCUSDT';
+        loadTradingView('BINANCE:BTCUSDT');
+        return;
+      }
       loadTradingView(symbol);
       addLog(`[CHART] Switched analysis terminal to ${symbol}`);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadTradingView('OANDA:XAUUSD');
+      // Default to BTC on weekend load
+      loadTradingView('BINANCE:BTCUSDT');
       runMarketScanner();
       setInterval(runMarketScanner, 5000);
       setInterval(updateOpenPositionsPnL, 1500);
+
+      if (isWeekendMarketClosed()) {
+        document.getElementById('market-mode-label').textContent = 'WEEKEND MODE (BTC TRADING ONLY)';
+      }
     });
 
-    // 2. NAVIGATION TABS
     function switchTab(tabName) {
       ['terminal', 'wallet', 'security'].forEach(t => {
         document.getElementById(`view-${t}`).classList.add('hidden');
@@ -444,67 +455,91 @@
       activeBtn.classList.remove('text-gray-400');
     }
 
-    // 3. MARKET SCANNER WITH DIRECT BUY / SELL BUTTONS
+    // 3. MARKET SCANNER (Enforces Weekend Forex Closure)
     const pairs = [
-      { pair: 'XAU/USD', tv: 'OANDA:XAUUSD', basePrice: 2684.50 },
-      { pair: 'EUR/USD', tv: 'FX:EURUSD', basePrice: 1.0842 },
-      { pair: 'GBP/USD', tv: 'FX:GBPUSD', basePrice: 1.2915 },
-      { pair: 'BTC/USDT', tv: 'BINANCE:BTCUSDT', basePrice: 89420.00 },
-      { pair: 'US100', tv: 'FOREXCOM:NAS100', basePrice: 20890.25 }
+      { pair: 'BTC/USDT', tv: 'BINANCE:BTCUSDT', basePrice: 89420.00, isOpen247: true },
+      { pair: 'XAU/USD', tv: 'OANDA:XAUUSD', basePrice: 2684.50, isOpen247: false },
+      { pair: 'EUR/USD', tv: 'FX:EURUSD', basePrice: 1.0842, isOpen247: false },
+      { pair: 'GBP/USD', tv: 'FX:GBPUSD', basePrice: 1.2915, isOpen247: false },
+      { pair: 'US100', tv: 'FOREXCOM:NAS100', basePrice: 20890.25, isOpen247: false }
     ];
 
     function runMarketScanner() {
       const list = document.getElementById('scanner-list');
       list.innerHTML = '';
+      const isWeekend = isWeekendMarketClosed();
 
       pairs.forEach(item => {
+        const isClosed = isWeekend && !item.isOpen247;
         const rsi = Math.floor(Math.random() * (78 - 22 + 1)) + 22;
         const drift = (Math.random() - 0.5) * (item.basePrice * 0.002);
         const currentPrice = (item.basePrice + drift).toFixed(item.pair.includes('USD') && !item.pair.includes('XAU') && !item.pair.includes('BTC') ? 4 : 2);
 
-        let signalText = 'NEUTRAL';
-        let signalColor = 'text-gray-400';
-        let buyHighlight = 'bg-emerald-600/20 hover:bg-emerald-500 text-emerald-400 hover:text-gray-950 border-emerald-500/40';
-        let sellHighlight = 'bg-rose-600/20 hover:bg-rose-500 text-rose-400 hover:text-white border-rose-500/40';
+        let signalText = isClosed ? 'MARKET CLOSED' : 'NEUTRAL';
+        let signalColor = isClosed ? 'text-gray-500' : 'text-gray-400';
 
-        if (rsi <= 35) {
-          signalText = 'STRONG BUY';
-          signalColor = 'text-emerald-400';
-          buyHighlight = 'bg-emerald-500 text-gray-950 border-emerald-400 shadow-md shadow-emerald-500/20 animate-pulse';
-        } else if (rsi >= 65) {
-          signalText = 'STRONG SELL';
-          signalColor = 'text-rose-400';
-          sellHighlight = 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-500/20 animate-pulse';
+        if (!isClosed) {
+          if (rsi <= 35) {
+            signalText = 'STRONG BUY';
+            signalColor = 'text-emerald-400';
+          } else if (rsi >= 65) {
+            signalText = 'STRONG SELL';
+            signalColor = 'text-rose-400';
+          }
         }
 
         const card = document.createElement('div');
-        card.className = 'bg-gray-900/90 p-2.5 rounded-lg border border-gray-800 hover:border-gray-700 space-y-2';
-        card.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div onclick="document.getElementById('symbol-selector').value='${item.tv}'; changeTradingViewSymbol('${item.tv}')" class="cursor-pointer">
-              <span class="font-bold text-white">${item.pair}</span>
-              <span class="text-[10px] text-gray-400 ml-1.5 mono">@ ${currentPrice}</span>
+        card.className = `bg-gray-900/90 p-2.5 rounded-lg border ${isClosed ? 'border-gray-800/50 opacity-60' : 'border-gray-800 hover:border-gray-700'} space-y-2`;
+        
+        if (isClosed) {
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="font-bold text-gray-400">${item.pair}</span>
+                <span class="text-[10px] text-gray-500 ml-1.5 mono">PAUSED</span>
+              </div>
+              <span class="text-[10px] font-bold text-gray-500">CLOSED (WEEKEND)</span>
             </div>
-            <div class="text-right">
-              <span class="text-[10px] font-bold ${signalColor}">${signalText}</span>
-              <span class="text-[10px] text-gray-500 mono block">RSI: ${rsi}</span>
+            <div class="text-[11px] text-gray-500 text-center py-1 bg-gray-950 rounded">
+              Awaiting Monday market opening...
             </div>
-          </div>
-          <div class="grid grid-cols-2 gap-1.5">
-            <button onclick="openTrade('${item.pair}', 'BUY', ${currentPrice})" class="py-1.5 rounded border text-[11px] font-bold transition ${buyHighlight}">
-              ▲ BUY ${item.pair.split('/')[0]}
-            </button>
-            <button onclick="openTrade('${item.pair}', 'SELL', ${currentPrice})" class="py-1.5 rounded border text-[11px] font-bold transition ${sellHighlight}">
-              ▼ SELL ${item.pair.split('/')[0]}
-            </button>
-          </div>
-        `;
+          `;
+        } else {
+          const buyHighlight = rsi <= 35 ? 'bg-emerald-500 text-gray-950 border-emerald-400 shadow-md shadow-emerald-500/20 animate-pulse' : 'bg-emerald-600/20 hover:bg-emerald-500 text-emerald-400 hover:text-gray-950 border-emerald-500/40';
+          const sellHighlight = rsi >= 65 ? 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-500/20 animate-pulse' : 'bg-rose-600/20 hover:bg-rose-500 text-rose-400 hover:text-white border-rose-500/40';
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div onclick="document.getElementById('symbol-selector').value='${item.tv}'; changeTradingViewSymbol('${item.tv}')" class="cursor-pointer">
+                <span class="font-bold text-white">${item.pair}</span>
+                <span class="text-[10px] text-emerald-400 ml-1.5 mono">@ ${currentPrice} (LIVE)</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold ${signalColor}">${signalText}</span>
+                <span class="text-[10px] text-gray-400 mono block">RSI: ${rsi}</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button onclick="openTrade('${item.pair}', 'BUY', ${currentPrice})" class="py-1.5 rounded border text-[11px] font-bold transition ${buyHighlight}">
+                ▲ BUY ${item.pair.split('/')[0]}
+              </button>
+              <button onclick="openTrade('${item.pair}', 'SELL', ${currentPrice})" class="py-1.5 rounded border text-[11px] font-bold transition ${sellHighlight}">
+                ▼ SELL ${item.pair.split('/')[0]}
+              </button>
+            </div>
+          `;
+        }
         list.appendChild(card);
       });
     }
 
-    // 4. OPEN & MANAGE LIVE POSITIONS
+    // 4. OPEN & MANAGE POSITIONS
     function openTrade(pair, side, entryPrice) {
+      if (isWeekendMarketClosed() && pair !== 'BTC/USDT') {
+        showToast('❌ Market closed for the weekend. Only BTC can be traded.');
+        return;
+      }
+
       const stakeKES = getStakeInKES();
       if (stakeKES <= 0) {
         showToast('⚠️ Enter a valid stake amount first.');
@@ -515,7 +550,6 @@
         return;
       }
 
-      // Reserve margin from available equity
       balanceKES -= stakeKES;
       updateBalanceDisplay();
 
@@ -542,12 +576,11 @@
       if (openPositions.length === 0) return;
 
       openPositions.forEach(pos => {
-        // Simulate live price tick movement
         const tickMove = (Math.random() - 0.48) * (pos.stakeKES * 0.08);
         pos.pnlKES += tickMove;
         const priceFactor = pos.side === 'BUY' ? 1 : -1;
         const pctChange = (pos.pnlKES / pos.stakeKES) * 0.002 * priceFactor;
-        pos.currentPrice = (parseFloat(pos.entryPrice) * (1 + pctChange)).toFixed(pos.pair.includes('USD') && !pos.pair.includes('XAU') && !pos.pair.includes('BTC') ? 4 : 2);
+        pos.currentPrice = (parseFloat(pos.entryPrice) * (1 + pctChange)).toFixed(pos.pair.includes('BTC') ? 2 : 4);
       });
 
       renderOpenPositions();
@@ -558,7 +591,6 @@
       if (index === -1) return;
 
       const pos = openPositions[index];
-      // Return reserved stake + realized P&L to balance
       balanceKES += (pos.stakeKES + pos.pnlKES);
       sessionPnLKES += pos.pnlKES;
 
@@ -579,7 +611,7 @@
       if (openPositions.length === 0) {
         container.innerHTML = `
           <div class="text-center py-6 text-gray-500">
-            No active positions. Click <strong class="text-emerald-400">BUY</strong> or <strong class="text-rose-400">SELL</strong> on any scanned market signal to open a trade.
+            No active positions. Weekend trading is active for <strong class="text-emerald-400">BTC/USDT</strong>.
           </div>`;
         return;
       }
@@ -618,34 +650,32 @@
       });
     }
 
-    // 5. AUTO-TRADING ROBOT TOGGLE
+    // 5. AUTO ROBOT (BTC ONLY ON WEEKENDS)
     function toggleBot() {
       const btn = document.getElementById('toggle-bot-btn');
       const badge = document.getElementById('bot-status-badge');
 
       if (!botActive) {
         botActive = true;
-        btn.textContent = '⏹ Stop Auto-Trading Robot';
+        btn.textContent = '⏹ Stop BTC Auto-Robot';
         btn.classList.remove('bg-emerald-500', 'hover:bg-emerald-400', 'text-gray-950');
         btn.classList.add('bg-rose-600', 'hover:bg-rose-500', 'text-white');
-        badge.textContent = 'SCANNING & ACTIVE';
+        badge.textContent = 'BTC SCANNING ACTIVE';
         badge.className = 'text-[10px] font-bold uppercase px-2 py-1 rounded bg-emerald-500/20 text-emerald-400';
-        addLog('[BOT] Auto-execution started. Opening positions on high-probability signals...');
+        addLog('[BOT] Weekend crypto scanner started. Trading BTC/USDT...');
 
         botInterval = setInterval(() => {
-          const target = pairs[Math.floor(Math.random() * pairs.length)];
-          const side = Math.random() > 0.5 ? 'BUY' : 'SELL';
-          openTrade(target.pair, side, target.basePrice);
-        }, 6500);
+          openTrade('BTC/USDT', Math.random() > 0.5 ? 'BUY' : 'SELL', 89420.00);
+        }, 7000);
       } else {
         botActive = false;
         clearInterval(botInterval);
-        btn.textContent = '▶ Activate Auto-Trading Robot';
+        btn.textContent = '▶ Activate BTC Auto-Robot';
         btn.classList.add('bg-emerald-500', 'hover:bg-emerald-400', 'text-gray-950');
         btn.classList.remove('bg-rose-600', 'hover:bg-rose-500', 'text-white');
         badge.textContent = 'STANDBY';
         badge.className = 'text-[10px] font-bold uppercase px-2 py-1 rounded bg-gray-800 text-gray-400';
-        addLog('[BOT] Auto-execution halted by user.');
+        addLog('[BOT] Auto-execution halted.');
       }
     }
 
@@ -664,7 +694,7 @@
       pnlEl.className = `mono font-bold ${sessionPnLKES >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
     }
 
-    // 6. M-PESA & WALLET LOGIC
+    // 6. M-PESA & WALLET
     let currentDepositMethod = 'mpesa';
 
     function selectDepositMethod(method) {
@@ -741,7 +771,11 @@
     function showToast(msg) {
       const toast = document.getElementById('toast');
       toast.textContent = msg;
-      toast.classList.remove('hidden');
+      toast.classList.add('hidden'); // reset
+      setTimeout(() => {
+        toast.textContent = msg;
+        toast.classList.remove('hidden');
+      }, 50);
       setTimeout(() => toast.classList.add('hidden'), 4500);
     }
   </script>
